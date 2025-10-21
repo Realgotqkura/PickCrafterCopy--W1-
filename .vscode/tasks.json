@@ -1,0 +1,45 @@
+{
+    "tasks": [
+        {
+            "label": "Build PickCrafterCopy",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                 "src/*.cpp",
+                 "src/glad.c",
+                 "-Isrc/headers",
+                "-Iexternal/include",
+                "-Lexternal/lib",
+                "-lglfw3",
+                "-lopengl32",
+                "-lgdi32",
+                "-luser32",
+                "-o",
+                "build/main.exe"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "Run PickCrafterCopy",
+            "type": "shell",
+            "command": "build/main.exe",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            },
+            "detail": "Run the main.exe file"
+        }
+    ],
+    "version": "2.0.0"
+}
