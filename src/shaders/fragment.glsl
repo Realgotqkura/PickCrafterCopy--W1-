@@ -4,10 +4,20 @@ out vec4 FragColor;
 
 in vec2 outTexCoords;
 
-uniform vec4 codeColor;
-uniform sampler2D ourTexture;
+uniform sampler2D textureOne;
+uniform sampler2D textureTwo;
 
-void main(){
+void main() {
 
-    FragColor = texture(ourTexture, outTexCoords);
+    vec4 tex1 = texture(textureOne, outTexCoords);
+    vec4 tex2 = texture(textureTwo, outTexCoords);
+
+
+// RGB blend only
+    vec3 rgb = mix(tex1.rgb, tex2.rgb, 0.2);
+
+// Alpha = top texture’s alpha
+    float alpha = 1.0 - tex2.a;
+
+    FragColor = vec4(rgb, alpha);
 }

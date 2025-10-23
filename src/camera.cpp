@@ -1,7 +1,7 @@
 #include "camera.h"
 #include "utilities.h"
 
-Camera2D::Camera2D() : m_position(glm::vec2(1.0f, 1.0f)), m_zoom(1.0f){}
+Camera2D::Camera2D() : m_position(glm::vec2(0.0f, 0.0f)), m_zoom(1.0f){}
 
 Camera2D::Camera2D(glm::vec2 position, float zoom) : m_position(position), m_zoom(zoom) {}
 

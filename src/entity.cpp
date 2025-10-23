@@ -3,9 +3,12 @@
 #include <iostream>
 #include "utilities.h"
 
-Entity::Entity(RawObject object, Texture *texture) : m_object(object), m_texture(texture) {}
+Entity::Entity(RawObject object, Texture *texture, const char* entityType) : m_object(object), m_texture(texture), m_entityType(entityType) {}
 
-Entity::Entity(RawObject object, Texture *texture, glm::vec3 position) : m_object(object), m_texture(texture), m_position(position) {}
+Entity::Entity(RawObject object, Texture *texture, glm::vec3 position, const char* entityType) : m_object(object), m_texture(texture), m_position(position), m_entityType(entityType) {}
+
+Entity::Entity(RawObject object, Texture *texture, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, const char* entityType) : m_object(object), m_texture(texture), m_position(position), m_rotation(rotation), m_scale(scale), m_entityType(entityType) {}
+
 
 glm::mat4 Entity::getModelMatrix()
 {
@@ -42,11 +45,9 @@ namespace EntityManager
 
 void createAllEntities()
 {
-    addEntity(std::make_unique<Entity>(createBasicSquare(), TextureManager::textureObjectsList["smily"].get(), glm::vec3(700.0f, 350.0f, 0.0f)));
-    addEntity(std::make_unique<Entity>(createBasicSquare(), TextureManager::textureObjectsList["smily"].get(), glm::vec3(700.0f, 450.0f, 0.0f)));
-    addEntity(std::make_unique<Entity>(createBasicSquare(), TextureManager::textureObjectsList["smily"].get(), glm::vec3(700.0f, 550.0f, 0.0f)));
-    addEntity(std::make_unique<Entity>(createBasicSquare(), TextureManager::textureObjectsList["smily"].get(), glm::vec3(700.0f, 650.0f, 0.0f)));
-    addEntity(std::make_unique<Entity>(createBasicSquare(), TextureManager::textureObjectsList["smily"].get(), glm::vec3(700.0f, 750.0f, 0.0f)));
+
+    addEntity(std::make_unique<Entity>(createBasicSquare(), TextureManager::textureObjectsList["grass"].get(), glm::vec3(WINDOW_WIDTH/2.0f,WINDOW_HEIGHT/2.0f, 0.0f), glm::vec3{0.0f}, glm::vec3(WINDOW_WIDTH, WINDOW_HEIGHT, 0.0f), "main_block"));
+
 }
 
 void addEntity(std::unique_ptr<Entity> entity)

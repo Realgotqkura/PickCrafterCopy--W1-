@@ -6,11 +6,10 @@
 #include "loader.h"
 #include "entity.h"
 #include "input.h"
+#include "utilities.h"
+#include "gamestate.h"
 
-#define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 720
-
-void on_resize_framebuffer_callback(GLFWwindow* window, int width, int height);
+void on_resize_framebuffer_callback(GLFWwindow *window, int width, int height);
 
 int main()
 {
@@ -41,29 +40,37 @@ int main()
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     glfwSetFramebufferSizeCallback(window, on_resize_framebuffer_callback);
 
-    initShaders();
-    //loadObjects();
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    if(e_ShaderProgram == -1){
+    initShaders();
+    // loadObjects();
+
+    if (e_ShaderProgram == -1)
+    {
         std::cout << "Shader program not loaded correctly! Exiting game [main.cpp line 46]" << std::endl;
         return -1;
     }
 
     loadAllTextures();
     createAllEntities();
-    updateTextureUniform(e_ShaderProgram);
+    initGameData();
+    setInt(e_ShaderProgram, "textureOne", 0);
+    setInt(e_ShaderProgram, "textureTwo", 1);
 
     preRender(e_ShaderProgram);
     Camera2D mainCamera{};
 
-    while(!glfwWindowShouldClose(window)){
+    while (!glfwWindowShouldClose(window))
+    {
 
-        processCameraMovement(window, mainCamera);
+        // processCameraMovement(window, mainCamera);
+        changeBlockBreakTexture(window);
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        //simple_color_render(true);
+        // simple_color_render(true);
         render(e_ShaderProgram, mainCamera);
 
         glfwSwapBuffers(window);
@@ -74,8 +81,8 @@ int main()
     return 0;
 }
 
-
-//Make sure rendering stays intact when changing window sizes
-void on_resize_framebuffer_callback(GLFWwindow* window, int width, int height){
-    glViewport(0,0, width, height);
+// Make sure rendering stays intact when changing window sizes
+void on_resize_framebuffer_callback(GLFWwindow *window, int width, int height)
+{
+    glViewport(0, 0, width, height);
 }

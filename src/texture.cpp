@@ -4,7 +4,6 @@
 #include "GLFW/glfw3.h"
 #include <iostream>
 
-
 namespace TextureManager
 {
     std::map<std::string, unsigned int> texturesList;
@@ -17,13 +16,14 @@ Texture::Texture(const char *path, const char *textureName)
     unsigned char *data = stbi_load(path, &width, &height, &channels, STBI_rgb_alpha);
     unsigned int texture;
 
+
     if (data)
     {
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     }
@@ -38,9 +38,16 @@ Texture::Texture(const char *path, const char *textureName)
     stbi_image_free(data);
 }
 
-
-void loadAllTextures(){
+void loadAllTextures()
+{
     std::cout << "ran texture check" << std::endl;
     TextureManager::textureObjectsList["cobblestone"] = std::make_unique<Texture>("textures/cobblestone.jpg", "cobblestone");
     TextureManager::textureObjectsList["smily"] = std::make_unique<Texture>("textures/smily.png", "smily");
+    TextureManager::textureObjectsList["grass"] = std::make_unique<Texture>("textures/grass.png", "grass");
+
+    // Block break textures
+    TextureManager::textureObjectsList["blockbreak_stage1"] = std::make_unique<Texture>("textures/breaking_stages/stage_one.png", "blockbreak_stage1");
+    TextureManager::textureObjectsList["blockbreak_stage2"] = std::make_unique<Texture>("textures/breaking_stages/stage_two.png", "blockbreak_stage2");
+    TextureManager::textureObjectsList["blockbreak_stage3"] = std::make_unique<Texture>("textures/breaking_stages/stage_three.png", "blockbreak_stage3");
+    TextureManager::textureObjectsList["blockbreak_stage4"] = std::make_unique<Texture>("textures/breaking_stages/stage_final.png", "blockbreak_stage4");
 }

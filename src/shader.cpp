@@ -70,13 +70,12 @@ void updateColorUniform(unsigned int &shaderProgram)
     glUniform4f(colorUniformLocation, rgb[0], rgb[1], rgb[2], 1.0f);
 }
 
-void updateTextureUniform(unsigned int &shaderProgram)
-{
-    glUniform1i(glGetUniformLocation(shaderProgram, "ourTexture"), 0);
-    glActiveTexture(GL_TEXTURE0);
-}
-
 void setMat4(const unsigned int &shaderID, const std::string &name, const glm::mat4 &mat)
 {
     glUniformMatrix4fv(glGetUniformLocation(shaderID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+}
+
+void setInt(const unsigned int &shaderID, const std::string &name, unsigned int num)
+{
+    glUniform1i(glGetUniformLocation(shaderID, name.c_str()), num);
 }

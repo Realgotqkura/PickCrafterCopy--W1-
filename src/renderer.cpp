@@ -12,6 +12,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <chrono>
 #include "utilities.h"
+#include "gamestate.h"
 
 void simple_color_render(bool randomize)
 {
@@ -37,7 +38,7 @@ void simple_color_render(bool randomize)
 
 void preRender(unsigned int &shaderProgram)
 {
-    glm::mat4 projection = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f, -1.0f, 1.0f);
+    glm::mat4 projection = glm::ortho(0.0f, (float) WINDOW_WIDTH, 0.0f,(float) WINDOW_HEIGHT, -1.0f, 1.0f);
     setMat4(shaderProgram, "projection", projection);
 }
 
@@ -59,12 +60,13 @@ void render(unsigned int &shaderProgram, Camera2D &cam2D)
     {
         setMat4(shaderProgram, "transform", EntityManager::entities[i].get()->getModelMatrix());
         glActiveTexture(GL_TEXTURE0);                                                                                         // activate textureunit 0
-        glBindTexture(GL_TEXTURE_2D, TextureManager::texturesList.at(EntityManager::entities[i]->m_texture->m_textureName)); // bind your texture
+        glBindTexture(GL_TEXTURE_2D, TextureManager::texturesList[EntityManager::entities[i]->m_texture->m_textureName]); // bind your texture
+        glActiveTexture(GL_TEXTURE1);                                                                                         // activate textureunit 0
+        glBindTexture(GL_TEXTURE_2D, TextureManager::texturesList[GameData::currentBlockBreakTexture->m_textureName]); // bind your texture
         glBindVertexArray(EntityManager::entities[i]->m_object.m_Vao);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         //do stuff
-        runSmily();
     }
         
         

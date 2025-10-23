@@ -37,26 +37,3 @@ void printMat4(const glm::mat4 &mat)
         std::cout << "|\n";
     }
 }
-
-void runSmily()
-{
-    for (int i = 0; i < EntityManager::entities.size(); i++)
-    {
-        Entity *entity = EntityManager::entities[i].get();
-        Texture *tex = entity->m_texture;
-
-        if (tex->m_textureName == "smily")
-        {
-            static std::mt19937 gen(static_cast<unsigned int>(std::time(nullptr)));
-            std::uniform_int_distribution<int> dist(1, 10);
-
-            if(isInsideRange(entity->m_position.x + dist(gen), 0, 1280)){
-                entity->m_position.x += dist(gen) / 100.0f;
-            }else{
-                entity->m_position.x = 0.0f;
-            }
-
-            
-        }
-    }
-}

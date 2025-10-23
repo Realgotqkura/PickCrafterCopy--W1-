@@ -12,5 +12,5 @@ void createShaderProgram(unsigned int vertexShader, unsigned int fragmentShader)
 void initShaders();
 void loadUniforms(unsigned int& shaderProgram);
 void updateColorUniform(unsigned int& shaderProgram);
-void updateTextureUniform(unsigned int& shaderProgram);
+void setInt(const unsigned int &shaderID, const std::string &name, unsigned int num);
 void setMat4(const unsigned int &shaderID, const std::string &name, const glm::mat4 &mat);
