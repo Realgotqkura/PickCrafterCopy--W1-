@@ -8,6 +8,9 @@
 #include "input.h"
 #include "utilities.h"
 #include "gamestate.h"
+#include "gui.h"
+#include <chrono>
+#include <ctime>
 
 void on_resize_framebuffer_callback(GLFWwindow *window, int width, int height);
 
@@ -43,6 +46,9 @@ int main()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
     initShaders();
     // loadObjects();
 
@@ -54,27 +60,34 @@ int main()
 
     loadAllTextures();
     createAllEntities();
+    createAllGuiElements();
     initGameData();
     setInt(e_ShaderProgram, "textureOne", 0);
-    setInt(e_ShaderProgram, "textureTwo", 1);
 
     preRender(e_ShaderProgram);
     Camera2D mainCamera{};
+    static double lastTime = glfwGetTime();
+    static unsigned int frames = 0;
 
     while (!glfwWindowShouldClose(window))
     {
-
-        // processCameraMovement(window, mainCamera);
+        // Render stuff
         changeBlockBreakTexture(window);
-
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        // simple_color_render(true);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         render(e_ShaderProgram, mainCamera);
-
         glfwSwapBuffers(window);
         glfwPollEvents();
+
+        // FPS calculation
+        frames++;
+        double currentTime = glfwGetTime();
+        if (currentTime - lastTime >= 1.0)
+        {
+            fps = frames;
+            frames = 0;
+            lastTime = currentTime; // <-- reset to current time
+            std::cout << "FPS: " << fps << std::endl;
+        }
     }
 
     glfwTerminate();

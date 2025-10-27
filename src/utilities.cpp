@@ -3,6 +3,8 @@
 #include <random>
 #include <ctime>
 
+float fps = 1;
+
 float clampValue(float value, float min, float max)
 {
     if (value < min)

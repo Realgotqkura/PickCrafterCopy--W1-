@@ -2,8 +2,11 @@
 #include "gamestate.h"
 #include "entity.h"
 #include <iostream>
+#include "utilities.h"
+#include <random>
+#include <ctime>
 
-bool isKeyPressedOnce(GLFWwindow* window, int key)
+bool isKeyPressedOnce(GLFWwindow *window, int key)
 {
     static std::unordered_map<int, bool> keyStates;
 
@@ -59,8 +62,8 @@ void changeBlockBreakTexture(GLFWwindow *window)
     if (!isKeyPressedOnce(window, GLFW_KEY_SPACE))
         return;
 
+    static std::mt19937 gen(static_cast<unsigned int>(std::time(nullptr)));
 
- 
     switch (GameData::blockBreakStage)
     {
     case 1:
@@ -79,17 +82,54 @@ void changeBlockBreakTexture(GLFWwindow *window)
         GameData::blockBreakStage = 1;
         GameData::currentBlockBreakTexture = TextureManager::textureObjectsList["blockbreak_stage1"].get();
 
-        for(int i = 0; i < EntityManager::entities.size(); i++){
-            if(strcmp(EntityManager::entities[i].get()->m_entityType, "main_block") == 0){
-                if(strcmp(EntityManager::entities[i].get()->m_texture->m_textureName.c_str(), "grass") == 0){
+        std::string breakTex = "grass";
+        for (int i = 0; i < EntityManager::entities.size(); i++)
+        {
+
+            if (EntityManager::entities[i]->m_entityType == "main_block")
+            {
+                if (strcmp(EntityManager::entities[i].get()->m_texture->m_textureName.c_str(), "grass") == 0)
+                {
+                    breakTex = "grass";
                     EntityManager::entities[i].get()->m_texture = TextureManager::textureObjectsList["cobblestone"].get();
-                }else if(strcmp(EntityManager::entities[i].get()->m_texture->m_textureName.c_str(), "cobblestone") == 0){
+                }
+                else if (strcmp(EntityManager::entities[i].get()->m_texture->m_textureName.c_str(), "cobblestone") == 0)
+                {
+                    breakTex = "cobblestone";
                     EntityManager::entities[i].get()->m_texture = TextureManager::textureObjectsList["grass"].get();
                 }
             }
         }
+
+        std::uniform_int_distribution<int> dist(0, 1000000000);
+        std::uniform_int_distribution<int> generatedVelocityX(-600, 600);
+        std::uniform_int_distribution<int> generatedVelocityY(300, 1000);
+        std::uniform_int_distribution<int> generatedPosX(250, 350);
+        std::uniform_int_distribution<int> generatedPosY(300, 700);
+        std::uniform_int_distribution<int> generatedRotation(-700, 700);
+        for (int i = 0; i < 30; i++)
+        {
+            std::string type = std::string("moving_") + std::to_string(dist(gen)).c_str();
+            Entity *movable = addEntity(std::make_unique<Entity>(createBasicSquare(), TextureManager::textureObjectsList[breakTex.c_str()].get(), glm::vec3(generatedPosX(gen), generatedPosY(gen), 0.0003f), glm::vec3{0.0f}, glm::vec3(75.0f, 75.0f, 0.0f), type));
+            movable->m_dynamic = true;
+            movable->m_gravityEnabled = true;
+            movable->m_VelocityX = (float)generatedVelocityX(gen);
+            movable->m_VelocityY = (float)generatedVelocityY(gen);
+            movable->m_speed = glm::vec2{0.5f, 2.0f};
+            movable->m_rotationVelocity = (float)generatedRotation(gen);
+            movable->m_rotationSpeed = 0.3f;
+        }
         break;
     }
+    getEntity("breaking_entity")->m_texture = GameData::currentBlockBreakTexture;
+    Entity *pickaxeEntity = getEntity("pickaxe");
 
-    std::cout << GameData::currentBlockBreakTexture->m_textureName << std::endl;
+    if (pickaxeEntity->m_rotation.z == 35.0f)
+    {
+        pickaxeEntity->m_rotation.z = 55.0f;
+    }
+    else
+    {
+        pickaxeEntity->m_rotation.z = 35.0f;
+    }
 }

@@ -13,6 +13,7 @@
 #include <chrono>
 #include "utilities.h"
 #include "gamestate.h"
+#include "gui.h"
 
 void simple_color_render(bool randomize)
 {
@@ -38,7 +39,7 @@ void simple_color_render(bool randomize)
 
 void preRender(unsigned int &shaderProgram)
 {
-    glm::mat4 projection = glm::ortho(0.0f, (float) WINDOW_WIDTH, 0.0f,(float) WINDOW_HEIGHT, -1.0f, 1.0f);
+    glm::mat4 projection = glm::ortho(0.0f, (float)WINDOW_WIDTH, 0.0f, (float)WINDOW_HEIGHT, -1.0f, 1.0f);
     setMat4(shaderProgram, "projection", projection);
 }
 
@@ -51,23 +52,36 @@ void render(unsigned int &shaderProgram, Camera2D &cam2D)
     trans = glm::scale(trans, glm::vec3(50.0f, 50.0f, 1)); // scale in pixels
 
     */
-    //cam
+    // cam
     glm::mat4 view = cam2D.getViewMatrix();
     setMat4(shaderProgram, "view", view);
 
-
     for (int i = 0; i < EntityManager::entities.size(); i++)
     {
-        setMat4(shaderProgram, "transform", EntityManager::entities[i].get()->getModelMatrix());
-        glActiveTexture(GL_TEXTURE0);                                                                                         // activate textureunit 0
-        glBindTexture(GL_TEXTURE_2D, TextureManager::texturesList[EntityManager::entities[i]->m_texture->m_textureName]); // bind your texture
-        glActiveTexture(GL_TEXTURE1);                                                                                         // activate textureunit 0
-        glBindTexture(GL_TEXTURE_2D, TextureManager::texturesList[GameData::currentBlockBreakTexture->m_textureName]); // bind your texture
-        glBindVertexArray(EntityManager::entities[i]->m_object.m_Vao);
+        Entity *entity = EntityManager::entities[i].get();
+        setMat4(shaderProgram, "transform", entity->getModelMatrix());
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, TextureManager::texturesList[entity->m_texture->m_textureName]);
+        glBindVertexArray(entity->m_object.m_Vao);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
-        //do stuff
+        // do stuff
+        static float cleanupTimer = 0.0f;    // persists between frames
+        float deltaTime = 1.0f / fps; // seconds per frame
+
+        cleanupTimer += deltaTime;
+        if (cleanupTimer >= 1.0f / 30.0f)
+        { // 60 times per second
+            entity->doEverything();
+        }
     }
-        
-        
-}
+
+        for (int i = 0; i < GuiManager::elements.size(); i++)
+        {
+            setMat4(shaderProgram, "transform", GuiManager::elements[i].get()->getModelMatrix());
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, TextureManager::texturesList[GuiManager::elements[i]->m_texture->m_textureName]);
+            glBindVertexArray(GuiManager::elements[i]->m_object.m_Vao);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
+    }
