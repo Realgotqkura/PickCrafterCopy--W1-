@@ -5,6 +5,7 @@
 namespace GameData{
 
     extern unsigned short blockBreakStage;
+    extern unsigned int xp;
     extern Texture* currentBlockBreakTexture;
 };
 

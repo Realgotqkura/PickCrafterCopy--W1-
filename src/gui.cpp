@@ -50,6 +50,8 @@ void createAllGuiElements()
     addGuiElements(std::make_unique<GuiElement>(createBasicSquare(), TextureManager::textureObjectsList["downMenu_Artifacts"].get(), glm::vec3(300.0f,45.0f, 0.0101f), glm::vec3{0.0f}, glm::vec3(65.0f, 65.0f, 0.0f), "buttonArtifacts"));
     addGuiElements(std::make_unique<GuiElement>(createBasicSquare(), TextureManager::textureObjectsList["downMenu_Rebirth"].get(), glm::vec3(400.0f,45.0f, 0.0101f), glm::vec3{0.0f}, glm::vec3(65.0f, 65.0f, 0.0f), "buttonRebirth"));
     addGuiElements(std::make_unique<GuiElement>(createBasicSquare(), TextureManager::textureObjectsList["downMenu_Empty"].get(), glm::vec3(500.0f,45.0f, 0.0101f), glm::vec3{0.0f}, glm::vec3(65.0f, 65.0f, 0.0f), "buttonEmpty"));
+
+    addGuiElements(std::make_unique<GuiElement>(createBasicSquare(), TextureManager::textureObjectsList["downMenu_GUI"].get(), glm::vec3(WINDOW_WIDTH/2.0f,WINDOW_HEIGHT - 45.0f, 0.0100f), glm::vec3{0.0f}, glm::vec3(WINDOW_WIDTH, 100.0f, 0.0f), "upMenu_GUI"));
 }
 
 void addGuiElements(std::unique_ptr<GuiElement> entity)

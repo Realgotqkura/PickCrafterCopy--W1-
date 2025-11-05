@@ -14,6 +14,7 @@
 #include "utilities.h"
 #include "gamestate.h"
 #include "gui.h"
+#include "font_rendering.h"
 
 void simple_color_render(bool randomize)
 {
@@ -37,14 +38,35 @@ void simple_color_render(bool randomize)
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void preRender(unsigned int &shaderProgram)
+void preRender()
 {
     glm::mat4 projection = glm::ortho(0.0f, (float)WINDOW_WIDTH, 0.0f, (float)WINDOW_HEIGHT, -1.0f, 1.0f);
-    setMat4(shaderProgram, "projection", projection);
+    glUseProgram(t_ShaderProgram);
+    setMat4(t_ShaderProgram, "projection", projection);
+    setInt(t_ShaderProgram, "textureOne", 0);
+
+    glUseProgram(e_ShaderProgram);
+    setMat4(e_ShaderProgram, "projection", projection);
+    setInt(e_ShaderProgram, "textureOne", 0);
 }
 
-void render(unsigned int &shaderProgram, Camera2D &cam2D)
+void renderText(Camera2D &cam2D)
 {
+
+    glm::mat4 view = cam2D.getViewMatrix();
+    setMat4(t_ShaderProgram, "view", view);
+
+    for (int i = 0; i < TextManager::textComponents.size(); i++)
+    {
+        setMat4(t_ShaderProgram, "transform", TextManager::textComponents[i].get()->getModelMatrix());
+        TextManager::textComponents[i].get()->renderText();
+    }
+}
+
+void render(Camera2D &cam2D)
+{
+
+    unsigned int shaderProgram = e_ShaderProgram;
 
     /*
     glm::mat4 trans = glm::mat4(1.0f);
@@ -52,9 +74,10 @@ void render(unsigned int &shaderProgram, Camera2D &cam2D)
     trans = glm::scale(trans, glm::vec3(50.0f, 50.0f, 1)); // scale in pixels
 
     */
+
     // cam
     glm::mat4 view = cam2D.getViewMatrix();
-    setMat4(shaderProgram, "view", view);
+    setMat4(e_ShaderProgram, "view", view);
 
     for (int i = 0; i < EntityManager::entities.size(); i++)
     {
@@ -63,11 +86,18 @@ void render(unsigned int &shaderProgram, Camera2D &cam2D)
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, TextureManager::texturesList[entity->m_texture->m_textureName]);
         glBindVertexArray(entity->m_object.m_Vao);
+
+        /*
+        float size = 0.0f;
+        glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, (GLint *)&size);
+        std::cout << "VBO size: " << size << std::endl;
+        */
+
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         // do stuff
-        static float cleanupTimer = 0.0f;    // persists between frames
-        float deltaTime = 1.0f / fps; // seconds per frame
+        static float cleanupTimer = 0.0f; // persists between frames
+        float deltaTime = 1.0f / fps;     // seconds per frame
 
         cleanupTimer += deltaTime;
         if (cleanupTimer >= 1.0f / 30.0f)
@@ -76,12 +106,12 @@ void render(unsigned int &shaderProgram, Camera2D &cam2D)
         }
     }
 
-        for (int i = 0; i < GuiManager::elements.size(); i++)
-        {
-            setMat4(shaderProgram, "transform", GuiManager::elements[i].get()->getModelMatrix());
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, TextureManager::texturesList[GuiManager::elements[i]->m_texture->m_textureName]);
-            glBindVertexArray(GuiManager::elements[i]->m_object.m_Vao);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
-        }
+    for (int i = 0; i < GuiManager::elements.size(); i++)
+    {
+        setMat4(shaderProgram, "transform", GuiManager::elements[i].get()->getModelMatrix());
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, TextureManager::texturesList[GuiManager::elements[i]->m_texture->m_textureName]);
+        glBindVertexArray(GuiManager::elements[i]->m_object.m_Vao);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
     }
+}

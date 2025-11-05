@@ -112,10 +112,10 @@ namespace EntityManager
 void createAllEntities()
 {
 
-    addEntity(std::make_unique<Entity>(createBasicSquare(), TextureManager::textureObjectsList["grass"].get(), glm::vec3(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f, 0.0f), glm::vec3{0.0f}, glm::vec3(WINDOW_WIDTH, WINDOW_HEIGHT, 0.0f), "main_block"));
-    addEntity(std::make_unique<Entity>(createBasicSquare(), TextureManager::textureObjectsList["blockbreak_stage1"].get(), glm::vec3(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f, 0.0001f), glm::vec3{0.0f}, glm::vec3(WINDOW_WIDTH, WINDOW_HEIGHT, 0.0f), "breaking_entity"));
+    addEntity(std::make_unique<Entity>(createBasicSquare(), TextureManager::textureObjectsList["grass"].get(), glm::vec3(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f, 0.0001f), glm::vec3{0.0f}, glm::vec3(WINDOW_WIDTH, WINDOW_HEIGHT, 0.0f), "main_block"));
+    addEntity(std::make_unique<Entity>(createBasicSquare(), TextureManager::textureObjectsList["blockbreak_stage1"].get(), glm::vec3(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f, 0.0002f), glm::vec3{0.0f}, glm::vec3(WINDOW_WIDTH, WINDOW_HEIGHT, 0.0f), "breaking_entity"));
 
-    addEntity(std::make_unique<Entity>(createBasicSquare(), TextureManager::textureObjectsList["diamond_pickaxe"].get(), glm::vec3(WINDOW_WIDTH - 100.0f, WINDOW_HEIGHT / 2.5f, 0.0002f), glm::vec3{0.0f, 0.0f, 35.0f}, glm::vec3(600, 900, 0.0f), "pickaxe"));
+    addEntity(std::make_unique<Entity>(createBasicSquare(), TextureManager::textureObjectsList["diamond_pickaxe"].get(), glm::vec3(WINDOW_WIDTH - 100.0f, WINDOW_HEIGHT / 2.5f, 0.0004f), glm::vec3{0.0f, 0.0f, 35.0f}, glm::vec3(600, 900, 0.0f), "pickaxe"));
 }
 
 Entity *addEntity(std::unique_ptr<Entity> entity)

@@ -2,39 +2,22 @@
 #include <sstream>
 #include <iostream>
 
-std::string loadVertexShaderSource(){
+std::string loadShaderSource(const char* path){
+    std::ifstream shaderFile;
 
-    std::ifstream vertexShaderFile;
+    shaderFile.open(path);
 
-    vertexShaderFile.open("src/shaders/vertex.glsl");
-
-    if(!vertexShaderFile.is_open()){
+    if(!shaderFile.is_open()){
         std::cout << "Couldn't Open Vertex Shader!" << std::endl;
         return "";
     }
 
     std::stringstream buffer;
-    buffer << vertexShaderFile.rdbuf();
+    buffer << shaderFile.rdbuf();
     return buffer.str();
-
 }
 
-std::string loadFragmentShaderSource(){
 
-    std::ifstream fragmentShaderSource;
-
-    fragmentShaderSource.open("src/shaders/fragment.glsl");
-
-    if(!fragmentShaderSource.is_open()){
-        std::cout << "Couldn't Open Fragment Shader!" << std::endl;
-        return "";
-    }
-
-    std::stringstream buffer;
-    buffer << fragmentShaderSource.rdbuf();
-    return buffer.str();
-
-}
 
 
 

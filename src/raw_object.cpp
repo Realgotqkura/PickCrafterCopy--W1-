@@ -1,6 +1,7 @@
 #include "raw_object.h"
 #include <glad/glad.h>
 #include "verteces.h"
+#include <iostream>
 
 RawObject::RawObject(const std::vector<float>& vertexes){
     std::array<unsigned int, 2> vaoAndVbo = loadRawObject(vertexes);

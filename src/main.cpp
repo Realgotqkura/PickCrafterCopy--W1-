@@ -11,6 +11,7 @@
 #include "gui.h"
 #include <chrono>
 #include <ctime>
+#include "font_rendering.h"
 
 void on_resize_framebuffer_callback(GLFWwindow *window, int width, int height);
 
@@ -52,19 +53,26 @@ int main()
     initShaders();
     // loadObjects();
 
-    if (e_ShaderProgram == -1)
+    if (e_ShaderProgram == -1 || t_ShaderProgram == -1)
     {
         std::cout << "Shader program not loaded correctly! Exiting game [main.cpp line 46]" << std::endl;
         return -1;
     }
 
+    bool loaded = loadFont();
+
+    if(!loaded)
+        return -1;
+
+
     loadAllTextures();
     createAllEntities();
     createAllGuiElements();
+    createAllText();
     initGameData();
-    setInt(e_ShaderProgram, "textureOne", 0);
 
-    preRender(e_ShaderProgram);
+
+    preRender();
     Camera2D mainCamera{};
     static double lastTime = glfwGetTime();
     static unsigned int frames = 0;
@@ -73,8 +81,16 @@ int main()
     {
         // Render stuff
         changeBlockBreakTexture(window);
+        glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        render(e_ShaderProgram, mainCamera);
+
+        glUseProgram(e_ShaderProgram);
+        render(mainCamera);
+
+        glUseProgram(t_ShaderProgram);
+        renderText(mainCamera);
+
+
         glfwSwapBuffers(window);
         glfwPollEvents();
 

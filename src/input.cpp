@@ -3,6 +3,7 @@
 #include "entity.h"
 #include <iostream>
 #include "utilities.h"
+#include "font_rendering.h"
 #include <random>
 #include <ctime>
 
@@ -101,16 +102,20 @@ void changeBlockBreakTexture(GLFWwindow *window)
             }
         }
 
+        GameData::xp++;
+        Text *xpText = getText("xp");
+        xpText->m_text = std::to_string(GameData::xp) + " XP";
+
         std::uniform_int_distribution<int> dist(0, 1000000000);
         std::uniform_int_distribution<int> generatedVelocityX(-600, 600);
         std::uniform_int_distribution<int> generatedVelocityY(300, 1000);
         std::uniform_int_distribution<int> generatedPosX(250, 350);
         std::uniform_int_distribution<int> generatedPosY(300, 700);
         std::uniform_int_distribution<int> generatedRotation(-700, 700);
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 100; i++)
         {
             std::string type = std::string("moving_") + std::to_string(dist(gen)).c_str();
-            Entity *movable = addEntity(std::make_unique<Entity>(createBasicSquare(), TextureManager::textureObjectsList[breakTex.c_str()].get(), glm::vec3(generatedPosX(gen), generatedPosY(gen), 0.0003f), glm::vec3{0.0f}, glm::vec3(75.0f, 75.0f, 0.0f), type));
+            Entity *movable = addEntity(std::make_unique<Entity>(createBasicSquare(), TextureManager::textureObjectsList[breakTex.c_str()].get(), glm::vec3(generatedPosX(gen), generatedPosY(gen), 0.0005f), glm::vec3{0.0f}, glm::vec3(75.0f, 75.0f, 0.0f), type));
             movable->m_dynamic = true;
             movable->m_gravityEnabled = true;
             movable->m_VelocityX = (float)generatedVelocityX(gen);

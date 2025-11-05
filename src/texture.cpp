@@ -60,5 +60,8 @@ void loadAllTextures()
     TextureManager::textureObjectsList["downMenu_Artifacts"] = std::make_unique<Texture>("textures/gui/buttonFrameArtifacts.png", "downMenu_Artifacts");
     TextureManager::textureObjectsList["downMenu_Rebirth"] = std::make_unique<Texture>("textures/gui/buttonFrameRebirth.png", "downMenu_Rebirth");
 
+    
+
+
     TextureManager::textureObjectsList["diamond_pickaxe"] = std::make_unique<Texture>("textures/pickaxes/Diamond_Pickaxe.png", "diamondPickaxe");
 }

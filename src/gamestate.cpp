@@ -3,6 +3,7 @@
 
 namespace GameData {
     unsigned short blockBreakStage = 1;
+    unsigned int xp = 0;
     Texture* currentBlockBreakTexture = nullptr;
 }
 

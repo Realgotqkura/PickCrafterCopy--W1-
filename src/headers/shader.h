@@ -4,11 +4,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-extern unsigned int e_ShaderProgram;
+extern unsigned int e_ShaderProgram; //entities
+extern unsigned int t_ShaderProgram; //text
 
 unsigned int loadVertexShader();
 unsigned int loadFragmentShader();
-void createShaderProgram(unsigned int vertexShader, unsigned int fragmentShader);
+unsigned int loadTextVertexShader();
+unsigned int loadTextFragmentShader();
+void createShaderProgram(unsigned int vertexShader, unsigned int fragmentShader, bool isTextShader);
 void initShaders();
 void loadUniforms(unsigned int& shaderProgram);
 void updateColorUniform(unsigned int& shaderProgram);

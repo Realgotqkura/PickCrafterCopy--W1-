@@ -1,7 +1,6 @@
 #pragma once
 #include <fstream>
 
-std::string loadVertexShaderSource();
-std::string loadFragmentShaderSource();
+std::string loadShaderSource(const char* path);
 
 
